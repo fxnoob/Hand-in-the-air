@@ -1,20 +1,31 @@
 import "@babel/polyfill"
 import Gest from './lib/gest.es6'
 import ChromeApi from './lib/chromeApi'
+import Db, { Schema } from "./lib/db"
 
 let AppInitState = 0 // it means app is off on startup
 
 const gest = new Gest();
 const chromeObj = new ChromeApi()
+const schema = new Schema()
+const db = new Db()
 
 class Main extends ChromeApi{
     constructor() {
         super()
     }
 
-    init = () => {
+    init = async () => {
+        await this.initDb()
         this.setUpTabSwipe()
         this.popUpClickSetup()
+    }
+
+    initDb = async () => {
+        const res = await db.get(["loadedFirstTine"]);
+        if(!res.hasOwnProperty("loadedFirstTime")) {
+            await db.set({loadedFirstTime: true, ...schema.data})
+        }
     }
 
     setUpTabSwipe = () => {
@@ -26,6 +37,9 @@ class Main extends ChromeApi{
             } else if (gesture.direction === "Right") {
                 console.log("Right")
                 chromeObj.shiftToRightTab()
+            } else if (gesture.direction === "Long up") {
+                console.log("Long up")
+                chromeObj.closeActiveTab()
             }
         })
     }
@@ -56,5 +70,7 @@ class Main extends ChromeApi{
 
 
 const main = new Main()
-main.init()
-
+main
+    .init()
+    .then(res => {console.log({res})})
+    .catch(e=> {console.log({e})});
