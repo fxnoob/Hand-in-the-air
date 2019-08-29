@@ -511,8 +511,7 @@ class Gest {
         if (!gestIsInitialised) { return false; }
 
         //check to see if we are already running
-        if (!video || !(video.paused || video.ended || video.seeking || video.readyState < video.HAVE_FUTURE_DATA)) { throwError(2); return false; }
-
+        //if (!video || !(video.paused || video.ended || video.seeking || video.readyState < video.HAVE_FUTURE_DATA)) { this.throwError(2); return false; }
         navigator.getUserMedia(
             // constraints
             {
@@ -554,13 +553,13 @@ class Gest {
             // errorCallback
             (error) =>  {
                 if (error.PERMISSION_DENIED || error.name === 'PERMISSION_DENIED') {
-                    throwError(10, error);
+                    this.throwError(10, error);
                 } else if (error.NOT_SUPPORTED_ERROR || error.name === 'NOT_SUPPORTED_ERROR') {
-                    throwError(11, error);
+                    this.throwError(11, error);
                 } else if (error.MANDATORY_UNSATISFIED_ERROR || error.name === 'MANDATORY_UNSATISFIED_ERROR') {
-                    throwError(12, error);
+                    this.throwError(12, error);
                 } else {
-                    throwError(13, error);
+                    this.throwError(13, error);
                 }
             });
 
@@ -571,7 +570,8 @@ class Gest {
         if (!gestIsInitialised || !userHasAskedToStart) { return false; }
 
         if (video) { video.src = ''; }
-        return !!stream.stop();
+        stream.getTracks().forEach(function (track) { track.stop(); });
+        //return !!stream.stop();
     }
 
     /* @public */

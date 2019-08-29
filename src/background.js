@@ -34,7 +34,6 @@ class Main extends ChromeApi{
             .browserAction
             .onClicked
             .addListener((tab) => {
-                console.log("clicked")
                 if(this.toggleApp()) {
                     gest.start();
                 } else {
