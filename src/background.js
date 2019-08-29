@@ -31,7 +31,10 @@ class Main extends ChromeApi{
     setUpTabSwipe = () => {
         gest.options.subscribeWithCallback((gesture) => {
             console.log({gesture})
-            if(gesture.direction === "Left") {
+            if(gesture.error) {
+                AppInitState = 0
+               chromeObj.openHelpPage()
+            } else if(gesture.direction === "Left") {
                 console.log("Left")
                 chromeObj.shiftToLeftTab()
             } else if (gesture.direction === "Right") {

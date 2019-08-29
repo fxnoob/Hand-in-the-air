@@ -10,7 +10,6 @@ class ChromeApi {
 
     shiftToLeftTab = () => {
         this.traverseTabs(tabs => {
-            let data = []
             let activeTabIndex = -1;
             for (let i = 0; i < tabs.length; i++) {
                 if(tabs[i].active) {
@@ -28,7 +27,6 @@ class ChromeApi {
     }
 
     shiftToRightTab = () => {
-        console.log("In right")
         this.traverseTabs(tabs => {
             let activeTabIndex = -1;
             for (let i = 0; i < tabs.length; i++) {
@@ -53,6 +51,27 @@ class ChromeApi {
             const tabId = tabs[0].id;
             console.log("URL from main.js", url);
             chrome.tabs.remove(tabId, callback)
+        });
+    }
+
+    openHelpPage = () => {
+        let helpTabIsOpened = false;
+        let activeTabId = -1
+        const helpUrl = chrome.extension.getURL('option.html')
+        chrome.tabs.query({}, (tabs) => {
+           for (let i =0; i < tabs.length; i ++ ) {
+               if (tabs[i].url === helpUrl) {
+                   chrome.tabs.update(tabs[i].id, {highlighted: true});
+                   helpTabIsOpened = true
+               }
+               if(tabs[i].active) {
+                   activeTabId = tabs[i].id
+               }
+           }
+           if(!helpTabIsOpened) {
+               chrome.tabs.create({ url: helpUrl }, () => {})
+           }
+            chrome.tabs.update(activeTabId, {highlighted: false});
         });
     }
 
