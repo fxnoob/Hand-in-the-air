@@ -23,6 +23,7 @@ class ChromeApi {
             } else {
                 chrome.tabs.update(tabs[activeTabIndex-1].id, {highlighted: true});
             }
+            chrome.tabs.update(tabs[activeTabIndex].id, {highlighted: false});
         })
     }
 
@@ -41,6 +42,7 @@ class ChromeApi {
             } else {
                 chrome.tabs.update(tabs[activeTabIndex+1].id, {highlighted: true});
             }
+            chrome.tabs.update(tabs[activeTabIndex].id, {highlighted: false});
         })
     }
 }
