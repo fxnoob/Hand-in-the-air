@@ -21,4 +21,12 @@ This extension uses a number of open source projects to work properly:
 
 ### Installation
 
-Coming soon...
+1. Navigate to `chrome://extensions/` in Google Chrome.
+
+2. Turn on `developer mode`.
+
+3. Click on `Load unpacked`.
+
+4. Select `dist` directory.
+
+5. It should now up in extension list.
