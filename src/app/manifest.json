@@ -9,16 +9,9 @@
   },
   "default_locale": "en",
   "background": {
-    "scripts": [
-      "background.bundle.js"
-    ]
+    "scripts": ["background.bundle.js"]
   },
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "storage",
-    "*://*/*"
-  ],
+  "permissions": ["tabs", "activeTab", "storage", "*://*/*"],
   "browser_action": {
     "default_icon": {
       "16": "images/16x16.png",
