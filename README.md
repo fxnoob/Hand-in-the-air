@@ -47,4 +47,7 @@ This extension uses a number of open source projects to work properly:
 [google.com](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/google)
 
 
+### WebStore
+
+[https://chrome.google.com/webstore/detail/swipe-hand-in-the-air/ljobefblafkbhgjihcfemfeedhkbacel](https://chrome.google.com/webstore/detail/swipe-hand-in-the-air/ljobefblafkbhgjihcfemfeedhkbacel)
 
