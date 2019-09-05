@@ -3,7 +3,7 @@ hand gesture recognition to change the chrome browser tab.
 
 ## Features
 
-[![N|Solid](https://raw.githubusercontent.com/fxnoob/swipe-tabs-chrome-extension/master/option-page/components/help2.png)](https://github.com/fxnoob/swipe-tabs-chrome-extension)
+[![N|Solid](https://raw.githubusercontent.com/fxnoob/swipe-tabs-chrome-extension/master/option-page/components/help/help2.png)](https://github.com/fxnoob/swipe-tabs-chrome-extension)
 
 Its a chrome extension which uses hand gesture recognition to change the chrome browser tab.
 
