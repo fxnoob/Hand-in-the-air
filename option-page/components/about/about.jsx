@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -22,7 +21,7 @@ export default () => {
           . If you like this project give it a Star{" "}
           <a href="https://github.com/fxnoob/swipe-tabs-chrome-extension">
             here.
-          </a> Visit my Youtube channel <a href="https://youtube.com/fxnoob">Here</a>
+          </a> Visit my Youtube channel <a href="https://youtube.com/fxnoob">Here.</a>
         </Typography>
     </div>
   );
