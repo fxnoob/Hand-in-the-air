@@ -8,6 +8,8 @@ import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
 import Home from "./home/home";
 import Help from "./help/help";
+import About from "./about/about";
+
 
 const queryString = require("query-string");
 
@@ -92,6 +94,9 @@ export default function ScrollableTabsButtonAuto() {
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Help />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <About />
         </TabPanel>
       </Container>
     </div>

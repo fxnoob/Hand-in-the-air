@@ -37,6 +37,13 @@ const onFail= () => {
   alert("could not connect to stream. Please allow camera permission!");
 }
 
+const openGitIssues = () => {
+  window.location.replace("https://github.com/fxnoob/swipe-tabs-chrome-extension/issues")
+}
+const openWiki = () => {
+  window.location.replace("https://github.com/fxnoob/swipe-tabs-chrome-extension/wiki")
+}
+
 export default function MediaCard() {
   const classes = useStyles();
 
@@ -60,11 +67,8 @@ export default function MediaCard() {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
+          <Button size="small" color="primary" onClick={openGitIssues}>
+            Another Issue?
           </Button>
         </CardActions>
       </Card>
@@ -79,11 +83,8 @@ export default function MediaCard() {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
+          <Button size="small" color="primary" onClick={openWiki}>
+            How to create an Custom Handler?
           </Button>
         </CardActions>
       </Card>
