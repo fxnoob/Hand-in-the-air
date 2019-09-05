@@ -68,7 +68,7 @@ export default function MediaCard() {
         </CardActionArea>
         <CardActions>
           <Button size="small" color="primary" onClick={openGitIssues}>
-            Another Issue?
+            Other Issue?
           </Button>
         </CardActions>
       </Card>
@@ -84,7 +84,7 @@ export default function MediaCard() {
         </CardActionArea>
         <CardActions>
           <Button size="small" color="primary" onClick={openWiki}>
-            How to create an Custom Handler?
+            How to create a Custom Handler?
           </Button>
         </CardActions>
       </Card>
