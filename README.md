@@ -8,7 +8,9 @@ hand gesture recognition to change the chrome browser tab.
 Its a chrome extension which uses hand gesture recognition to change the chrome browser tab.
 
 # New Features!
-
+  - Create custom gesture handler for any website. If custom handler is not created, it will fall back to basic handlers described below. 
+    
+    
   - Wave hand left to right to switch active tab towards right
   - Wave hand right to left to switch active tab towards left.
   - Wave hand bottom to top to close active tab.
@@ -30,3 +32,7 @@ This extension uses a number of open source projects to work properly:
 4. Select `dist` directory.
 
 5. It should now up in extension list.
+
+## Development
+
+### [How to create Plugin for this extension?](https://github.com/fxnoob/swipe-tabs-chrome-extension/wiki/How-to-create-Plugin-for-this-extension%3F)
