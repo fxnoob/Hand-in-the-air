@@ -1,6 +1,14 @@
 class ChromeApi {
   constructor() {}
 
+  getActiveTab = () => {
+    return new Promise((resolve, reject) => {
+      chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
+        resolve(tabs[0]);
+      });
+    });
+  };
+
   traverseTabs = callback => {
     chrome.tabs.query({}, tabs => {
       callback(tabs);
@@ -56,7 +64,7 @@ class ChromeApi {
   openHelpPage = () => {
     let helpTabIsOpened = false;
     let activeTabId = -1;
-    const helpUrl = chrome.extension.getURL("option.html");
+    const helpUrl = chrome.extension.getURL("option.html") + "?page=help";
     chrome.tabs.query({}, tabs => {
       for (let i = 0; i < tabs.length; i++) {
         if (tabs[i].url === helpUrl) {

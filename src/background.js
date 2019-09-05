@@ -2,7 +2,9 @@ import "@babel/polyfill";
 import Gest from "./lib/gest.es6";
 import ChromeApi from "./lib/chromeApi";
 import Db, { Schema } from "./lib/db";
+import customTlds from "./constants/customTlds";
 
+const parseDomain = require("parse-domain");
 let AppInitState = 0; // it means app is off on startup
 
 const gest = new Gest();
@@ -29,24 +31,53 @@ class Main extends ChromeApi {
   };
 
   setUpTabSwipe = () => {
-    gest.options.subscribeWithCallback(gesture => {
-      console.log({ gesture });
-      if (gesture.error) {
-        AppInitState = 0;
-        chromeObj.openHelpPage();
-      } else {
-        if (gesture.direction === "Left") {
-          console.log("Left");
-          chromeObj.shiftToLeftTab();
-        } else if (gesture.direction === "Right") {
-          console.log("Right");
-          chromeObj.shiftToRightTab();
-        } else if (gesture.direction === "Long up") {
-          console.log("Long up");
-          chromeObj.closeActiveTab();
+    gest.options.subscribeWithCallback(async gesture => {
+      try {
+        if (gesture.error) {
+          AppInitState = 0;
+          chromeObj.openHelpPage();
+        } else {
+          const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+          if (!initCustomHandler) {
+            if (gesture.direction === "Left") {
+              console.log("Left");
+              chromeObj.shiftToLeftTab();
+            } else if (gesture.direction === "Right") {
+              console.log("Right");
+              chromeObj.shiftToRightTab();
+            } else if (gesture.direction === "Long up") {
+              console.log("Long up");
+              chromeObj.closeActiveTab();
+            }
+          }
         }
+      } catch (e) {
+        console.log({ e });
       }
     });
+  };
+
+  setUpCustomTabSwipe = async gesture => {
+    const currentTab = await chromeObj.getActiveTab();
+    console.log({ currentTab });
+    const key = parseDomain(currentTab.url, { customTlds: customTlds });
+    if (key === null) return 0;
+    else {
+      try {
+        const k = key.domain;
+        const _data = await db.get([k]);
+        chrome.tabs.executeScript(currentTab.id, {
+          code:
+            "var gesture = " +
+            JSON.stringify(gesture) +
+            ";" +
+            _data[key.domain].codeString
+        });
+        return 1;
+      } catch (e) {
+        return 0;
+      }
+    }
   };
 
   popUpClickSetup() {
