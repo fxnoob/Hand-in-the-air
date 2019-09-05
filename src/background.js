@@ -1,79 +1,112 @@
-import "@babel/polyfill"
-import Gest from './lib/gest.es6'
-import ChromeApi from './lib/chromeApi'
-import Db, { Schema } from "./lib/db"
+import "@babel/polyfill";
+import Gest from "./lib/gest.es6";
+import ChromeApi from "./lib/chromeApi";
+import Db, { Schema } from "./lib/db";
+import customTlds from "./constants/customTlds";
 
-let AppInitState = 0 // it means app is off on startup
+const parseDomain = require("parse-domain");
+let AppInitState = 0; // it means app is off on startup
 
 const gest = new Gest();
-const chromeObj = new ChromeApi()
-const schema = new Schema()
-const db = new Db()
+const chromeObj = new ChromeApi();
+const schema = new Schema();
+const db = new Db();
 
-class Main extends ChromeApi{
-    constructor() {
-        super()
+class Main extends ChromeApi {
+  constructor() {
+    super();
+  }
+
+  init = async () => {
+    await this.initDb();
+    this.setUpTabSwipe();
+    this.popUpClickSetup();
+  };
+
+  initDb = async () => {
+    const res = await db.get(["loadedFirstTine"]);
+    if (!res.hasOwnProperty("loadedFirstTime")) {
+      await db.set({ loadedFirstTime: true, ...schema.data });
     }
+  };
 
-    init = async () => {
-        await this.initDb()
-        this.setUpTabSwipe()
-        this.popUpClickSetup()
-    }
-
-    initDb = async () => {
-        const res = await db.get(["loadedFirstTine"]);
-        if(!res.hasOwnProperty("loadedFirstTime")) {
-            await db.set({loadedFirstTime: true, ...schema.data})
-        }
-    }
-
-    setUpTabSwipe = () => {
-        gest.options.subscribeWithCallback((gesture) => {
-            console.log({gesture})
-            if(gesture.error) {
-                AppInitState = 0
-               chromeObj.openHelpPage()
-            } else if(gesture.direction === "Left") {
-                console.log("Left")
-                chromeObj.shiftToLeftTab()
+  setUpTabSwipe = () => {
+    gest.options.subscribeWithCallback(async gesture => {
+      try {
+        if (gesture.error) {
+          AppInitState = 0;
+          chromeObj.openHelpPage();
+        } else {
+          const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+          if (!initCustomHandler) {
+            if (gesture.direction === "Left") {
+              console.log("Left");
+              chromeObj.shiftToLeftTab();
             } else if (gesture.direction === "Right") {
-                console.log("Right")
-                chromeObj.shiftToRightTab()
+              console.log("Right");
+              chromeObj.shiftToRightTab();
             } else if (gesture.direction === "Long up") {
-                console.log("Long up")
-                chromeObj.closeActiveTab()
+              console.log("Long up");
+              chromeObj.closeActiveTab();
             }
-        })
-    }
+          }
+        }
+      } catch (e) {
+        console.log({ e });
+      }
+    });
+  };
 
-    popUpClickSetup() {
-        chrome
-            .browserAction
-            .onClicked
-            .addListener((tab) => {
-                if(this.toggleApp()) {
-                    gest.start();
-                } else {
-                    this.stopApp()
-                }
-            });
+  setUpCustomTabSwipe = async gesture => {
+    const currentTab = await chromeObj.getActiveTab();
+    console.log({ currentTab });
+    const key = parseDomain(currentTab.url, { customTlds: customTlds });
+    if (key === null) return 0;
+    else {
+      try {
+        const k = key.domain;
+        const _data = await db.get([k]);
+        chrome.tabs.executeScript(currentTab.id, {
+          code:
+            "var gesture = " +
+            JSON.stringify(gesture) +
+            ";" +
+            _data[key.domain].codeString
+        });
+        return 1;
+      } catch (e) {
+        return 0;
+      }
     }
+  };
 
-    toggleApp = () => {
-      AppInitState = AppInitState?0:1;
-      return AppInitState
-    }
+  popUpClickSetup() {
+    chrome.browserAction.onClicked.addListener(tab => {
+      if (this.toggleApp()) {
+        gest.start();
+      } else {
+        this.stopApp();
+      }
+    });
+  }
 
-    stopApp = () => {
-       AppInitState = 0
-        gest.stop();
-    }
+  toggleApp = () => {
+    AppInitState = AppInitState ? 0 : 1;
+    return AppInitState;
+  };
+
+  stopApp = () => {
+    AppInitState = 0;
+    gest.stop();
+  };
 }
 
-
-const main = new Main()
+const main = new Main();
 main
-    .init()
-    .then(res => {console.log({res})})
-    .catch(e=> {console.log({e})});
+  .init()
+  .then(res => {
+    console.log({ res });
+  })
+  .catch(e => {
+    console.log({ e });
+  });

@@ -1,87 +1,104 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Gest from "../../src/lib/gest.es6";
-import Img from './help.png'
-import Img2 from './help2.png'
-import Container from '@material-ui/core/Container';
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
+import Home from "./home/home";
+import Help from "./help/help";
+import About from "./about/about";
 
-const useStyles = makeStyles({
-    card: {
-        maxWidth: 800,
-    },
-    media: {
-        height: 140,
-    },
-    media2: {
-        height: 470,
+
+const queryString = require("query-string");
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      <Box p={3}>{children}</Box>
+    </Typography>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    "aria-controls": `scrollable-auto-tabpanel-${index}`
+  };
+}
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+    width: "100%",
+    backgroundColor: theme.palette.background.paper
+  }
+}));
+
+export default function ScrollableTabsButtonAuto() {
+  let initState = 0;
+  const classes = useStyles();
+  const parsed = queryString.parse(location.search);
+  if (parsed.page) {
+    switch (parsed.page) {
+      case "home":
+        initState = 0;
+        break;
+      case "help":
+        initState = 1;
+        break;
+      case "about":
+        initState = 2;
+        break;
+      case "setting":
+        initState = 3;
+        break;
     }
-});
+  }
+  const [value, setValue] = React.useState(initState);
 
-const gest = new Gest();
-gest.options.subscribeWithCallback((gesture) => {
-    console.log(gesture);
-})
-gest.start()
+  function handleChange(event, newValue) {
+    setValue(newValue);
+  }
 
-export default function MediaCard() {
-    const classes = useStyles();
-
-    return (
-        <div>
-        <Container maxWidth="sm" spacing={3}>
-            <h1>Help</h1>
-            <Card className={classes.card}>
-                <CardActionArea>
-                    <CardMedia
-                        className={classes.media}
-                        image={Img}
-                        title="Troubleshooting"
-                    />
-                    <CardContent>
-                        Allow Camera permission after that close this tab and click on extension's icon again.
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions>
-            </Card>
-        </Container>
-        <Container maxWidth="sm" spacing={3}>
-            <h1>Features</h1>
-            <Card className={classes.card}>
-                <CardActionArea>
-                    <CardMedia
-                        className={classes.media2}
-                        image={Img2}
-                        title="Features"
-                    />
-                    <CardContent>
-                        <p>Wave hand left to right to switch active tab towards right.</p>
-                        <p>Wave hand right to left to switch active tab towards left.</p>
-                        <p>Wave hand bottom to top to close active tab.</p>
-                    </CardContent>
-                </CardActionArea>
-                <CardActions>
-                    <Button size="small" color="primary">
-                        Share
-                    </Button>
-                    <Button size="small" color="primary">
-                        Learn More
-                    </Button>
-                </CardActions>
-            </Card>
-        </Container>
-        </div>
-    );
+  return (
+    <div className={classes.root}>
+      <Container maxWidth="lg" spacing={10}>
+        <AppBar position="static" color="blue">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="tabs"
+          >
+            <Tab label="Home" {...a11yProps(0)} />
+            <Tab label="Help" {...a11yProps(1)} />
+            <Tab label="About" {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
+        <TabPanel value={value} index={0}>
+          <Home />
+        </TabPanel>
+        <TabPanel value={value} index={1}>
+          <Help />
+        </TabPanel>
+        <TabPanel value={value} index={2}>
+          <About />
+        </TabPanel>
+      </Container>
+    </div>
+  );
 }
