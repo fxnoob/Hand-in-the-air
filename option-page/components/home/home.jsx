@@ -6,6 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import CustomSwipeHandlers from "./showCustomSwipe";
 import Db from "../../../src/lib/db";
 import customTlds from "../../../src/constants/customTlds";
+import * as Babel from "@babel/standalone";
 
 const db = new Db();
 const parseDomain = require("parse-domain");
@@ -38,11 +39,18 @@ export default function FilledTextFields() {
 
   const saveCustomSwipeHandler = () => {
     const { url, codeString } = values;
+    let transpiledCodeString;
     if (url !== "" && codeString !== "") {
+      try {
+        transpiledCodeString = Babel.transform(codeString, { presets: ['es2015','es2016','es2017'] }).code
+      } catch (e) {
+        alert(e);
+        return;
+      }
       const domain = parseDomain(url, { customTlds: customTlds });
       db.set({
         [domain.domain]: {
-          codeString: codeString,
+          codeString: transpiledCodeString,
           created: +new Date(),
           url: url
         }
