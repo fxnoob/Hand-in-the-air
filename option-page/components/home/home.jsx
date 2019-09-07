@@ -66,7 +66,7 @@ export default function FilledTextFields() {
 
   return (
     <div>
-      <h3>Create Custom Handler</h3>
+      <h3>Create Custom Handler or Download from <a href="https://github.com/fxnoob/hand-gestures-chrome-extension" target="_blank"> here </a></h3>
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="url"
