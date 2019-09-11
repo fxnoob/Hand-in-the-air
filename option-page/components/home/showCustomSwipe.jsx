@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import Switch from "@material-ui/core/Switch";
 import Db from "../../../src/lib/db";
 
 const db = new Db();
@@ -51,20 +52,10 @@ const fetchAllData = () => {
 const headCells = [
   { id: "domain", numeric: false, disablePadding: true, label: "Domain" },
   { id: "code", numeric: true, disablePadding: false, label: "Code" },
-  { id: "created", numeric: true, disablePadding: false, label: "Created" }
+  { id: "created", numeric: true, disablePadding: false, label: "Created" },
+  { id: "action", numeric: true, disablePadding: false, label: "Action" }
 ];
-
 const rows = [];
-
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
 
 function EnhancedTableHead(props) {
   const {
@@ -202,7 +193,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(2)
   },
   table: {
-    minWidth: 750
+    minWidth: 300
   },
   tableWrapper: {
     overflowX: "auto"
@@ -229,6 +220,7 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [RowVal, setRows] = React.useState({ rows: [] });
+  const [loaded, setLoaded] = React.useState(0);
 
   React.useEffect(() => {
     const init = async () => {
@@ -241,12 +233,15 @@ export default function EnhancedTable() {
             rows.push({
               domain: key,
               codeString: res[key].codeString,
-              created: timeDifference(+new Date(), res[key].created)
+              created: res[key].created,
+              createdHR: timeDifference(+new Date(), res[key].created),
+              isActive: res[key].isActive
             });
           }
         }
         console.log({ res });
         setRows({ rows: rows });
+        setLoaded(1);
       } catch (e) {
         console.log({ e });
       }
@@ -303,6 +298,18 @@ export default function EnhancedTable() {
     setDense(event.target.checked);
   }
 
+  const toggleActive = row => {
+    console.log({ row });
+    const rows = RowVal.rows;
+    row.isActive = !row.isActive;
+    rows[row.domain] = row;
+    db.set({
+      [row.domain]: row
+    });
+    console.log({ rows });
+    setRows({rows: rows});
+  };
+
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows =
@@ -338,7 +345,6 @@ export default function EnhancedTable() {
                 return (
                   <TableRow
                     hover
-                    onClick={event => handleClick(event, row.domain)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -347,6 +353,7 @@ export default function EnhancedTable() {
                   >
                     <TableCell padding="checkbox">
                       <Checkbox
+                        onClick={event => handleClick(event, row.domain)}
                         checked={isItemSelected}
                         inputProps={{ "aria-labelledby": labelId }}
                       />
@@ -360,15 +367,24 @@ export default function EnhancedTable() {
                       {row.domain}
                     </TableCell>
                     <TableCell align="right">{row.codeString}</TableCell>
-                    <TableCell align="right">{row.created}</TableCell>
+                    <TableCell align="right">{row.createdHR}</TableCell>
+                    <TableCell align="right">
+                      {loaded ? (
+                        <Switch
+                          checked={row.isActive}
+                          value={row.isActive}
+                          onChange={() => {
+                            toggleActive(row);
+                          }}
+                          inputProps={{ "aria-label": "secondary checkbox" }}
+                        />
+                      ) : (
+                        "loading.."
+                      )}
+                    </TableCell>
                   </TableRow>
                 );
               })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 49 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </div>
@@ -376,6 +392,9 @@ export default function EnhancedTable() {
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
+          onChangePage={e => {
+            console.log(e);
+          }}
           rowsPerPage={rowsPerPage}
           page={page}
           backIconButtonProps={{

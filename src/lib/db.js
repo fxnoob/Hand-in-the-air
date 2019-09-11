@@ -2,7 +2,12 @@ export class Schema {
   constructor() {
     this.data = {
       //urls in trash
-      trash: []
+      trash: [],
+      factory_setting: {
+        left: true,
+        right: true,
+        long_up: false
+      }
     };
   }
 }
