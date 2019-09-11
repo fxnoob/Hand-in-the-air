@@ -13,6 +13,7 @@ export default () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
+      <h1>About</h1>
         <Typography variant="h5" gutterBottom>
           Hi, This is{" "}
           <a href="https://github.com/fxnoob" target="_blank">

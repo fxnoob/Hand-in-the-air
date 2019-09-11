@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -9,7 +9,7 @@ import Container from "@material-ui/core/Container";
 import Home from "./home/home";
 import Help from "./help/help";
 import About from "./about/about";
-
+import Setting from "./setting/setting";
 
 const queryString = require("query-string");
 
@@ -57,10 +57,10 @@ export default function ScrollableTabsButtonAuto() {
       case "help":
         initState = 1;
         break;
-      case "about":
+      case "setting":
         initState = 2;
         break;
-      case "setting":
+      case "about":
         initState = 3;
         break;
     }
@@ -74,7 +74,7 @@ export default function ScrollableTabsButtonAuto() {
   return (
     <div className={classes.root}>
       <Container maxWidth="lg" spacing={10}>
-        <AppBar position="static" color="blue">
+        <AppBar position="static" color="default">
           <Tabs
             value={value}
             onChange={handleChange}
@@ -86,17 +86,29 @@ export default function ScrollableTabsButtonAuto() {
           >
             <Tab label="Home" {...a11yProps(0)} />
             <Tab label="Help" {...a11yProps(1)} />
+            <Tab label="Setting" {...a11yProps(3)} />
             <Tab label="About" {...a11yProps(2)} />
           </Tabs>
         </AppBar>
         <TabPanel value={value} index={0}>
-          <Home />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Home />
+          </Suspense>
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Help />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Help />
+          </Suspense>
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <About />
+          <Suspense fallback={<div>Loading...</div>}>
+            <Setting />
+          </Suspense>
+        </TabPanel>
+        <TabPanel value={value} index={3}>
+          <Suspense fallback={<div>Loading...</div>}>
+            <About />
+          </Suspense>
         </TabPanel>
       </Container>
     </div>
