@@ -8,7 +8,6 @@ import Db from "../../../src/lib/db";
 import customTlds from "../../../src/constants/customTlds";
 import * as Babel from "@babel/standalone";
 
-Babel.registerPlugin('lolizer', lolizer);
 const db = new Db();
 const parseDomain = require("parse-domain");
 const useStyles = makeStyles(theme => ({
@@ -45,8 +44,7 @@ export default function FilledTextFields() {
     if (url !== "" && codeString !== "") {
       try {
         transpiledCodeString = Babel.transform(codeString, {
-          presets: ["es2015", "es2016", "es2017"],
-          plugins:[]
+          presets: ["es2015", "es2016", "es2017"]
         }).code;
       } catch (e) {
         alert(e);
