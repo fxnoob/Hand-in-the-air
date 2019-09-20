@@ -38,21 +38,26 @@ export default function FilledTextFields() {
   };
 
   const saveCustomSwipeHandler = () => {
+    let comments = ''
     const { url, codeString } = values;
     let transpiledCodeString;
     if (url !== "" && codeString !== "") {
       try {
-        transpiledCodeString = Babel.transform(codeString, { presets: ['es2015','es2016','es2017'] }).code
+        transpiledCodeString = Babel.transform(codeString, {
+          presets: ["es2015", "es2016", "es2017"]
+        }).code;
       } catch (e) {
         alert(e);
         return;
       }
       const domain = parseDomain(url, { customTlds: customTlds });
+      const domainWithTld = domain.domain + "." + domain.tld;
       db.set({
-        [domain.domain]: {
+        [domainWithTld]: {
           codeString: transpiledCodeString,
           created: +new Date(),
-          url: url
+          url: url,
+          isActive: 1
         }
       }).then(res => {
         alert("Saved!");
@@ -66,7 +71,16 @@ export default function FilledTextFields() {
 
   return (
     <div>
-      <h3>Create Custom Handler or Download from <a href="https://github.com/fxnoob/hand-gestures-chrome-extension" target="_blank"> here </a></h3>
+      <h3>
+        Create Custom Handler or Download from{" "}
+        <a
+          href="https://github.com/fxnoob/hand-gestures-chrome-extension"
+          target="_blank"
+        >
+          {" "}
+          here{" "}
+        </a>
+      </h3>
       <form className={classes.container} noValidate autoComplete="off">
         <TextField
           id="url"
@@ -85,7 +99,6 @@ export default function FilledTextFields() {
           onChange={handleChange("codeString")}
           rows="4"
           cols="5"
-          defaultValue=""
           className={classes.textField}
           margin="normal"
           variant="filled"

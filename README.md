@@ -40,11 +40,11 @@ This extension uses a number of open source projects to work properly:
 
 ### Available Plugins
 
-[https://tinder.com/app/recs](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/tinder)
+[https://tinder.com/app/recs](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/tinder.com)
 
 [https://play2048.co](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/play2048.co)
 
-[google.com](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/google)
+[google.com](https://github.com/fxnoob/hand-gestures-chrome-extension/tree/master/plugins/google.com)
 
 
 ### WebStore

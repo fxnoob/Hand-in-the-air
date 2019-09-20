@@ -24,8 +24,8 @@ class Main extends ChromeApi {
   };
 
   initDb = async () => {
-    const res = await db.get(["loadedFirstTine"]);
-    if (!res.hasOwnProperty("loadedFirstTime")) {
+    const res = await db.get(["loadedFirstTime1"]);
+    if (!res.hasOwnProperty("loadedFirstTime1")) {
       await db.set({ loadedFirstTime: true, ...schema.data });
     }
   };
@@ -39,14 +39,13 @@ class Main extends ChromeApi {
         } else {
           const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
           if (!initCustomHandler) {
-            if (gesture.direction === "Left") {
-              console.log("Left");
+            const setting = await db.get(["factory_setting"]);
+            const { left, right, long_up } = setting.factory_setting;
+            if (gesture.direction === "Left" && left) {
               chromeObj.shiftToLeftTab();
-            } else if (gesture.direction === "Right") {
-              console.log("Right");
+            } else if (gesture.direction === "Right" && right) {
               chromeObj.shiftToRightTab();
-            } else if (gesture.direction === "Long up") {
-              console.log("Long up");
+            } else if (gesture.direction === "Long up" && long_up) {
               chromeObj.closeActiveTab();
             }
           }
@@ -64,14 +63,15 @@ class Main extends ChromeApi {
     if (key === null) return 0;
     else {
       try {
-        const k = key.domain;
+        const k = key.domain+"."+key.tld;
         const _data = await db.get([k]);
+        if (!_data[k].isActive) return 0;
         chrome.tabs.executeScript(currentTab.id, {
           code:
             "var gesture = " +
             JSON.stringify(gesture) +
             ";" +
-            _data[key.domain].codeString
+            _data[k].codeString
         });
         return 1;
       } catch (e) {
