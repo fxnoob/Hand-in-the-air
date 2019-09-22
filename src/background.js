@@ -24,9 +24,13 @@ class Main extends ChromeApi {
   };
 
   initDb = async () => {
-    const res = await db.get(["loadedFirstTime1"]);
-    if (!res.hasOwnProperty("loadedFirstTime1")) {
-      await db.set({ loadedFirstTime: true, ...schema.data });
+    const res = await db.get(["loadedFirstTime2"]);
+    if (!res.hasOwnProperty("loadedFirstTime2")) {
+      await db.set({
+        loadedFirstTime: true,
+        ...schema.data,
+        ...schema.Plugins
+      });
     }
   };
 
@@ -63,7 +67,7 @@ class Main extends ChromeApi {
     if (key === null) return 0;
     else {
       try {
-        const k = key.domain+"."+key.tld;
+        const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
         if (!_data[k].isActive) return 0;
         chrome.tabs.executeScript(currentTab.id, {
