@@ -15,6 +15,7 @@ const db = new Db();
 class Main extends ChromeApi {
   constructor() {
     super();
+    this.LastRecordedTimeStamp = +new Date();
   }
 
   init = async () => {
@@ -41,17 +42,25 @@ class Main extends ChromeApi {
           AppInitState = 0;
           chromeObj.openHelpPage();
         } else {
-          const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
-          if (!initCustomHandler) {
-            const setting = await db.get(["factory_setting"]);
-            const { left, right, long_up } = setting.factory_setting;
-            if (gesture.direction === "Left" && left) {
-              chromeObj.shiftToLeftTab();
-            } else if (gesture.direction === "Right" && right) {
-              chromeObj.shiftToRightTab();
-            } else if (gesture.direction === "Long up" && long_up) {
-              chromeObj.closeActiveTab();
+          const currentTimeStamp = +new Date();
+          const diffTimeStamp = Math.abs(
+            currentTimeStamp - this.LastRecordedTimeStamp
+          );
+          //lock for 1.5 sec for next gesture recognition
+          if (diffTimeStamp > 1500) {
+            const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+            if (!initCustomHandler) {
+              const setting = await db.get(["factory_setting"]);
+              const { left, right, long_up } = setting.factory_setting;
+              if (gesture.direction === "Left" && left) {
+                chromeObj.shiftToLeftTab();
+              } else if (gesture.direction === "Right" && right) {
+                chromeObj.shiftToRightTab();
+              } else if (gesture.direction === "Long up" && long_up) {
+                chromeObj.closeActiveTab();
+              }
             }
+            this.LastRecordedTimeStamp = currentTimeStamp
           }
         }
       } catch (e) {
