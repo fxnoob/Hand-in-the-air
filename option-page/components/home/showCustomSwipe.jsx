@@ -307,7 +307,7 @@ export default function EnhancedTable() {
       [row.domain]: row
     });
     console.log({ rows });
-    setRows({rows: rows});
+    setRows({ rows: rows });
   };
 
   const isSelected = name => selected.indexOf(name) !== -1;

@@ -24,7 +24,6 @@
 	THE SOFTWARE.
 */
 
-
 //setup getUserMedia - this could screw up another implementation of getUserMedia on the page, but really, they shouldn't be using the camera for anything else
 window.navigator.getUserMedia =
   navigator.getUserMedia ||

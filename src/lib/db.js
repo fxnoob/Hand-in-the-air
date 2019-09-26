@@ -1,5 +1,8 @@
+import Plugins from "../constants/plugins";
+
 export class Schema {
   constructor() {
+    this.Plugins = Plugins;
     this.data = {
       //urls in trash
       trash: [],

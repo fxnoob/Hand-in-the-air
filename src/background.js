@@ -15,6 +15,7 @@ const db = new Db();
 class Main extends ChromeApi {
   constructor() {
     super();
+    this.LastRecordedTimeStamp = +new Date();
   }
 
   init = async () => {
@@ -24,9 +25,13 @@ class Main extends ChromeApi {
   };
 
   initDb = async () => {
-    const res = await db.get(["loadedFirstTime1"]);
-    if (!res.hasOwnProperty("loadedFirstTime1")) {
-      await db.set({ loadedFirstTime: true, ...schema.data });
+    const res = await db.get(["loadedFirstTime2"]);
+    if (!res.hasOwnProperty("loadedFirstTime2")) {
+      await db.set({
+        loadedFirstTime: true,
+        ...schema.data,
+        ...schema.Plugins
+      });
     }
   };
 
@@ -37,17 +42,25 @@ class Main extends ChromeApi {
           AppInitState = 0;
           chromeObj.openHelpPage();
         } else {
-          const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
-          if (!initCustomHandler) {
-            const setting = await db.get(["factory_setting"]);
-            const { left, right, long_up } = setting.factory_setting;
-            if (gesture.direction === "Left" && left) {
-              chromeObj.shiftToLeftTab();
-            } else if (gesture.direction === "Right" && right) {
-              chromeObj.shiftToRightTab();
-            } else if (gesture.direction === "Long up" && long_up) {
-              chromeObj.closeActiveTab();
+          const currentTimeStamp = +new Date();
+          const diffTimeStamp = Math.abs(
+            currentTimeStamp - this.LastRecordedTimeStamp
+          );
+          //lock for 1.5 sec for next gesture recognition
+          if (diffTimeStamp > 1500) {
+            const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+            if (!initCustomHandler) {
+              const setting = await db.get(["factory_setting"]);
+              const { left, right, long_up } = setting.factory_setting;
+              if (gesture.direction === "Left" && left) {
+                chromeObj.shiftToLeftTab();
+              } else if (gesture.direction === "Right" && right) {
+                chromeObj.shiftToRightTab();
+              } else if (gesture.direction === "Long up" && long_up) {
+                chromeObj.closeActiveTab();
+              }
             }
+            this.LastRecordedTimeStamp = currentTimeStamp
           }
         }
       } catch (e) {
@@ -63,7 +76,7 @@ class Main extends ChromeApi {
     if (key === null) return 0;
     else {
       try {
-        const k = key.domain+"."+key.tld;
+        const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
         if (!_data[k].isActive) return 0;
         chrome.tabs.executeScript(currentTab.id, {
