@@ -25,8 +25,8 @@ class Main extends ChromeApi {
   };
 
   initDb = async () => {
-    const res = await db.get(["loadedFirstTime2"]);
-    if (!res.hasOwnProperty("loadedFirstTime2")) {
+    const res = await db.get(["loadedFirstTime3"]);
+    if (!res.hasOwnProperty("loadedFirstTime3")) {
       await db.set({
         loadedFirstTime: true,
         ...schema.data,
