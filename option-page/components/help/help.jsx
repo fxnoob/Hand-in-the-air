@@ -27,29 +27,31 @@ const init = () => {
   } else {
     alert("Camera is not available");
   }
-}
+};
 
-const onSuccess= (stream) => {
+const onSuccess = stream => {};
 
-}
-
-const onFail= () => {
+const onFail = () => {
   alert("could not connect to stream. Please allow camera permission!");
-}
+};
 
 const openGitIssues = () => {
-  window.location.replace("https://github.com/fxnoob/swipe-tabs-chrome-extension/issues")
-}
+  window.location.replace(
+    "https://github.com/fxnoob/swipe-tabs-chrome-extension/issues"
+  );
+};
 const openWiki = () => {
-  window.location.replace("https://github.com/fxnoob/swipe-tabs-chrome-extension/wiki")
-}
+  window.location.replace(
+    "https://github.com/fxnoob/swipe-tabs-chrome-extension/wiki"
+  );
+};
 
 export default function MediaCard() {
   const classes = useStyles();
 
   React.useEffect(() => {
-    init()
-  }, [])
+    init();
+  }, []);
 
   return (
     <div>

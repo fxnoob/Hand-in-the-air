@@ -9,6 +9,12 @@ class ChromeApi {
     });
   };
 
+  sendMessageToActiveTab = async payload => {
+    const tab = await this.getActiveTab();
+    chrome.tabs.sendMessage(tab.id, payload);
+    return true;
+  };
+
   traverseTabs = callback => {
     chrome.tabs.query({}, tabs => {
       callback(tabs);

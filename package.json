@@ -41,6 +41,7 @@
     "@material-ui/core": "^4.3.3",
     "@material-ui/icons": "^4.2.1",
     "clsx": "^1.0.4",
+    "oridomi": "^1.1.2",
     "parse-domain": "^2.3.2",
     "query-string": "^6.8.3",
     "react": "^16.8.6",
