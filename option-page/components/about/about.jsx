@@ -14,16 +14,17 @@ export default () => {
   return (
     <div className={classes.root}>
       <h1>About</h1>
-        <Typography variant="h5" gutterBottom>
-          Hi, This is{" "}
-          <a href="https://github.com/fxnoob" target="_blank">
-            Hitesh Saini
-          </a>
-          . If you like this project give it a Star{" "}
-          <a href="https://github.com/fxnoob/swipe-tabs-chrome-extension">
-            here.
-          </a> Visit my Youtube channel <a href="https://youtube.com/fxnoob">Here.</a>
-        </Typography>
+      <Typography variant="h5" gutterBottom>
+        Hi, This is{" "}
+        <a href="https://github.com/fxnoob" target="_blank">
+          Hitesh Saini
+        </a>
+        . If you like this project give it a Star{" "}
+        <a href="https://github.com/fxnoob/swipe-tabs-chrome-extension">
+          here.
+        </a>{" "}
+        Visit my Youtube channel <a href="https://youtube.com/fxnoob">Here.</a>
+      </Typography>
     </div>
   );
 };

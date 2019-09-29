@@ -8,7 +8,6 @@ const parseDomain = require("parse-domain");
 let AppInitState = 0; // it means app is off on startup
 
 const gest = new Gest();
-const chromeObj = new ChromeApi();
 const schema = new Schema();
 const db = new Db();
 
@@ -40,7 +39,7 @@ class Main extends ChromeApi {
       try {
         if (gesture.error) {
           AppInitState = 0;
-          chromeObj.openHelpPage();
+          this.openHelpPage();
         } else {
           const currentTimeStamp = +new Date();
           const diffTimeStamp = Math.abs(
@@ -53,14 +52,14 @@ class Main extends ChromeApi {
               const setting = await db.get(["factory_setting"]);
               const { left, right, long_up } = setting.factory_setting;
               if (gesture.direction === "Left" && left) {
-                chromeObj.shiftToLeftTab();
+                this.shiftToLeftTab();
               } else if (gesture.direction === "Right" && right) {
-                chromeObj.shiftToRightTab();
+                this.shiftToRightTab();
               } else if (gesture.direction === "Long up" && long_up) {
-                chromeObj.closeActiveTab();
+                this.closeActiveTab();
               }
             }
-            this.LastRecordedTimeStamp = currentTimeStamp
+            this.LastRecordedTimeStamp = currentTimeStamp;
           }
         }
       } catch (e) {
@@ -70,7 +69,7 @@ class Main extends ChromeApi {
   };
 
   setUpCustomTabSwipe = async gesture => {
-    const currentTab = await chromeObj.getActiveTab();
+    const currentTab = await this.getActiveTab();
     console.log({ currentTab });
     const key = parseDomain(currentTab.url, { customTlds: customTlds });
     if (key === null) return 0;
@@ -79,13 +78,21 @@ class Main extends ChromeApi {
         const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
         if (!_data[k].isActive) return 0;
-        chrome.tabs.executeScript(currentTab.id, {
-          code:
-            "var gesture = " +
-            JSON.stringify(gesture) +
-            ";" +
-            _data[k].codeString
-        });
+        else if (_data[k].type === 0) {
+          console.log("type 0");
+          await this.sendMessageToActiveTab({
+            action: _data[k].action,
+            gesture: gesture
+          });
+        } else if (_data[k].type === 1) {
+          chrome.tabs.executeScript(currentTab.id, {
+            code:
+              "var gesture = " +
+              JSON.stringify(gesture) +
+              ";" +
+              _data[k].codeString
+          });
+        }
         return 1;
       } catch (e) {
         return 0;
