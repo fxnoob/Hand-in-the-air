@@ -1,4 +1,6 @@
 import Oridomi from "./oridomi";
+import Throwable from "./throwable";
+import Tab from './tab'
 
 const Plugins = {};
 
@@ -8,7 +10,7 @@ const registerPlugin = (...plugins) => {
   });
 };
 //register plugin here
-registerPlugin(Oridomi);
+registerPlugin(Oridomi, Throwable, Tab);
 
 export const names = Object.keys(Plugins);
 
