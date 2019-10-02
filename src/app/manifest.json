@@ -7,7 +7,6 @@
     "16": "images/16x16.png",
     "128": "images/128x128.png"
   },
-  "default_locale": "en",
   "background": {
     "scripts": ["background.bundle.js"]
   },
