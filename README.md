@@ -1,4 +1,4 @@
-# swipe-tabs-chrome-extension
+# Hand in the Air Chrome Extension
 
 Hand Gesture recognition control meets web browser
 
