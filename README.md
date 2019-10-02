@@ -1,5 +1,6 @@
 # swipe-tabs-chrome-extension
-hand gesture recognition to change the chrome browser tab.
+
+Hand Gesture recognition control meets web browser
 
 #### WebStore
 
