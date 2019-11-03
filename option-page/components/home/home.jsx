@@ -200,6 +200,7 @@ export default function FilledTextFields() {
         >
           {options.map(option => (
             <MenuItem
+              style={{borderBottom: "1px solid black"}}
               key={option}
               value={option}
               selected={option === "None"}
