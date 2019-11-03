@@ -1,7 +1,7 @@
 import Oridomi from "./oridomi";
 import Throwable from "./throwable";
-import Tab from './tab'
-import MuteUnmute from './mute_unmute'
+import Tab from "./tab";
+import MuteUnmute from "./mute_unmute";
 
 const Plugins = {};
 

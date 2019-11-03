@@ -1,8 +1,7 @@
 if (!gesture.error) {
   if (gesture.direction === "Left") {
-    document.querySelector("#btnNext").click()
+    document.querySelector("#btnNext").click();
   } else if (gesture.direction === "Right") {
-    document.querySelector("#btnPrevious").click()
+    document.querySelector("#btnPrevious").click();
   }
 }
-

@@ -1,7 +1,8 @@
-if(!gesture.error) {
+if (!gesture.error) {
   var evt;
   if (gesture.direction === "Long up") {
-    evt= new KeyboardEvent('keydown', {altKey:false,
+    evt = new KeyboardEvent("keydown", {
+      altKey: false,
       bubbles: true,
       cancelBubble: false,
       cancelable: true,
@@ -22,9 +23,11 @@ if(!gesture.error) {
       returnValue: false,
       shiftKey: false,
       type: "keydown",
-      which: 38});
+      which: 38
+    });
   } else if (gesture.direction === "Long down") {
-    evt= new KeyboardEvent('keydown', {altKey:false,
+    evt = new KeyboardEvent("keydown", {
+      altKey: false,
       bubbles: true,
       cancelBubble: false,
       cancelable: true,
@@ -45,9 +48,11 @@ if(!gesture.error) {
       returnValue: false,
       shiftKey: false,
       type: "keydown",
-      which: 40});
+      which: 40
+    });
   } else if (gesture.direction === "Left") {
-    evt= new KeyboardEvent('keydown', {altKey:false,
+    evt = new KeyboardEvent("keydown", {
+      altKey: false,
       bubbles: true,
       cancelBubble: false,
       cancelable: true,
@@ -68,9 +73,11 @@ if(!gesture.error) {
       returnValue: false,
       shiftKey: false,
       type: "keydown",
-      which: 37});
+      which: 37
+    });
   } else if (gesture.direction === "Right") {
-    evt= new KeyboardEvent('keydown', {altKey:false,
+    evt = new KeyboardEvent("keydown", {
+      altKey: false,
       bubbles: true,
       cancelBubble: false,
       cancelable: true,
@@ -91,7 +98,8 @@ if(!gesture.error) {
       returnValue: false,
       shiftKey: false,
       type: "keydown",
-      which: 39});
+      which: 39
+    });
   }
   if (evt) {
     document.body.dispatchEvent(evt);

@@ -2,7 +2,7 @@
 if (!gesture.error) {
   var evt;
   if (gesture.direction === "Long up") {
-    evt = new KeyboardEvent('keydown', {
+    evt = new KeyboardEvent("keydown", {
       altKey: false,
       bubbles: true,
       cancelBubble: false,
@@ -27,7 +27,7 @@ if (!gesture.error) {
       which: 38
     });
   } else if (gesture.direction === "Long down") {
-    evt = new KeyboardEvent('keydown', {
+    evt = new KeyboardEvent("keydown", {
       altKey: false,
       bubbles: true,
       cancelBubble: false,
@@ -52,7 +52,7 @@ if (!gesture.error) {
       which: 40
     });
   } else if (gesture.direction === "Left") {
-    evt = new KeyboardEvent('keydown', {
+    evt = new KeyboardEvent("keydown", {
       altKey: false,
       bubbles: true,
       cancelBubble: false,
@@ -77,7 +77,7 @@ if (!gesture.error) {
       which: 37
     });
   } else if (gesture.direction === "Right") {
-    evt = new KeyboardEvent('keydown', {
+    evt = new KeyboardEvent("keydown", {
       altKey: false,
       bubbles: true,
       cancelBubble: false,

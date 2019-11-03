@@ -69,7 +69,7 @@ export default function FilledTextFields() {
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
   };
-  const saveCustomSwipeHandler= () => {
+  const saveCustomSwipeHandler = () => {
     const { url, codeString } = values;
     if (url !== "" && codeString !== "") {
       const obj = {
@@ -81,7 +81,7 @@ export default function FilledTextFields() {
         action: ""
       };
       const type = isDefaultPluginSelected === true ? 0 : 1;
-      console.log({type})
+      console.log({ type });
       if (type === 0) {
         obj.type = 0;
         obj.action = codeString;
@@ -200,7 +200,7 @@ export default function FilledTextFields() {
         >
           {options.map(option => (
             <MenuItem
-              style={{borderBottom: "1px solid black"}}
+              style={{ borderBottom: "1px solid black" }}
               key={option}
               value={option}
               selected={option === "None"}

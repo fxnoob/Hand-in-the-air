@@ -1,4 +1,4 @@
-import jQuery from 'jquery'
+import jQuery from "jquery";
 require("./deps/jquery.throwable");
 
 const name = "Throwable";
@@ -23,9 +23,7 @@ const exec = gesture => {
         areaDetection: [[0, 0, 300, 300]],
         collisionDetection: true
       });
-  }
-  else if (gesture.direction === "Right") {
-
+  } else if (gesture.direction === "Right") {
   }
   console.log(gesture.direction, name);
 };
