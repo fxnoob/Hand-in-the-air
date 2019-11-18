@@ -2,6 +2,7 @@ import Oridomi from "./oridomi";
 import Throwable from "./throwable";
 import Tab from "./tab";
 import MuteUnmute from "./mute_unmute";
+import ArrowKeys from "./arrow_keys";
 
 const Plugins = {};
 
@@ -11,7 +12,7 @@ const registerPlugin = (...plugins) => {
   });
 };
 //register plugin here
-registerPlugin(Oridomi, Throwable, Tab, MuteUnmute);
+registerPlugin(Oridomi, Throwable, Tab, MuteUnmute, ArrowKeys);
 
 export const names = Object.keys(Plugins);
 
