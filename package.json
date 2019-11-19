@@ -1,5 +1,5 @@
 {
-  "name": "swipe-tabs-chrome-extension",
+  "name": "hand-in-the-air",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -7,15 +7,21 @@
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
     "dev": "webpack --watch --progress --colors --config webpack.config.js --mode=development",
     "build": "webpack --progress --colors --config webpack.config.js --mode=production",
-    "test": "prettier --check src/**/*.js && yarn build"
+    "prettier_check_src": "prettier --check src/**/*.{js,jsx}",
+    "prettier_check_popup": "prettier --check src/**/*.{js,jsx}",
+    "prettier_check_option": "prettier --check src/**/*.{js,jsx}",
+    "prettier_check_content": "prettier --check src/**/*.{js,jsx}",
+    "prettier": "yarn prettier_check_src && yarn prettier_check_popup && yarn prettier_check_option && yarn prettier_check_content",
+    "test:option": "mocha --timeout 10000 tests/index.js",
+    "prod": "yarn prettier && yarn build && yarn test:option",
+    "test": "yarn prettier && yarn build"
   },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "keywords": [],
-  "author": "",
+  "author": "Hitesh Saini<fxnoob71@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -30,6 +36,7 @@
     "file-loader": "^4.2.0",
     "image-webpack-loader": "^5.0.0",
     "prettier": "1.18.2",
+    "puppeteer": "^2.0.0",
     "react-hot-loader": "^4.12.10",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",

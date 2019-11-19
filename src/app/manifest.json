@@ -1,5 +1,6 @@
 {
   "name": "Hand in the Air",
+  "key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwe4bIvIb+NPPR+GE71+3\nG+Bh8+E41lzt0Ht2qEcUaMfkrMBTXPfh1cVpnAhnakq3UI23w29lPngMVGWK8Bki\nJIORoT7xfyiPTnN7QK5p5MrKZnZ0lVRj3raqT3JFaor/ls4Ng0rAvQpMtPUK9Ede\nLtE/ElVKOxcNvpDryPKsd7naowgy7WBXpcWt7qu99KtzNHvrFJs66absPDrOVwl+\nHVAQEqufLSpheRWbaubgi0zEMiFKPCUJ4FzAgf2z5v4mtXlfvItQOXDlGsqX/7MX\nNmOOceRqzXaytOEOW9VqiROkdeBFGNZfAhR6DeyafDBvnTxwTAiEXCGt89ZYeaMr\nYQIDAQAB\n-----END PUBLIC KEY-----\n",
   "version": "0.0.20",
   "manifest_version": 2,
   "description": " hand gesture recognition",
