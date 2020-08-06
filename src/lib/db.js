@@ -9,7 +9,10 @@ export class Schema {
       factory_setting: {
         left: true,
         right: true,
-        long_up: false
+        long_up: false,
+        hand_gesture: true,
+        voice_recognition: false,
+        eye_tracking: false
       }
     };
   }
@@ -39,6 +42,22 @@ export default class Db {
     return new Promise((resolve, reject) => {
       try {
         chrome.storage.local.get(params, items => {
+          if (items === undefined) {
+            reject(new Error("Error"));
+          } else {
+            resolve(items);
+          }
+        });
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  getAll() {
+    return new Promise((resolve, reject) => {
+      try {
+        chrome.storage.local.get({}, items => {
           if (items === undefined) {
             reject(new Error("Error"));
           } else {

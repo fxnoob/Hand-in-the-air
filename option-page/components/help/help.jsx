@@ -8,6 +8,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Img from "./help.png";
 import Img2 from "./help2.png";
+import { checkDeviceSupport } from "../../../src/lib/helper";
 
 const useStyles = makeStyles({
   card: {
@@ -23,7 +24,11 @@ const useStyles = makeStyles({
 
 const init = () => {
   if (navigator.webkitGetUserMedia) {
-    navigator.webkitGetUserMedia({ video: true }, onSuccess, onFail);
+    navigator.webkitGetUserMedia(
+      { video: true, audio: true },
+      onSuccess,
+      onFail
+    );
   } else {
     alert("Camera is not available");
   }

@@ -38,6 +38,7 @@ module.exports = {
     publicPath: "/",
     filename: "[name].bundle.js"
   },
+  devtool: "inline-source-map",
   plugins: [
     new CopyWebpackPlugin(
       [

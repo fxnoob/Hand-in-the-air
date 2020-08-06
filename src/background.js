@@ -1,4 +1,5 @@
 import "@babel/polyfill";
+import * as SpeechSynthesis from "annyang";
 import Gest from "./lib/gest.es6";
 import ChromeApi from "./lib/chromeApi";
 import Db, { Schema } from "./lib/db";
@@ -19,22 +20,40 @@ class Main extends ChromeApi {
 
   init = async () => {
     await this.initDb();
-    this.setUpTabSwipe();
+    this.setUpHandGesture();
+    this.setUpVoiceRecognition();
     this.popUpClickSetup();
   };
-
   initDb = async () => {
+    let queryRes;
     const res = await db.get(["loadedFirstTime3"]);
     if (!res.hasOwnProperty("loadedFirstTime3")) {
-      await db.set({
+      queryRes = {
         loadedFirstTime: true,
         ...schema.data,
         ...schema.Plugins
-      });
+      };
+      await db.set(queryRes);
+    } else {
+      queryRes = await db.getAll();
     }
+    return queryRes;
   };
-
-  setUpTabSwipe = () => {
+  setUpVoiceRecognition = () => {
+    const commands = {
+      left: () => {
+        this.shiftToLeftTab();
+      },
+      right: () => {
+        this.shiftToRightTab();
+      },
+      close: () => {
+        this.stopApp();
+      }
+    };
+    SpeechSynthesis.addCommands(commands);
+  };
+  setUpHandGesture = () => {
     gest.options.subscribeWithCallback(async gesture => {
       try {
         if (gesture.error) {
@@ -47,7 +66,7 @@ class Main extends ChromeApi {
           );
           //lock for 1.5 sec for next gesture recognition
           if (diffTimeStamp > 1500) {
-            const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+            const initCustomHandler = await this.setUpGestureCallback(gesture);
             if (!initCustomHandler) {
               const setting = await db.get(["factory_setting"]);
               const { left, right, long_up } = setting.factory_setting;
@@ -68,7 +87,7 @@ class Main extends ChromeApi {
     });
   };
 
-  setUpCustomTabSwipe = async gesture => {
+  setUpGestureCallback = async gesture => {
     const currentTab = await this.getActiveTab();
     console.log({ currentTab });
     const key = parseDomain(currentTab.url, { customTlds: customTlds });
@@ -103,7 +122,7 @@ class Main extends ChromeApi {
   popUpClickSetup() {
     chrome.browserAction.onClicked.addListener(tab => {
       if (this.toggleApp()) {
-        gest.start();
+        this.startApp();
       } else {
         this.stopApp();
       }
@@ -115,9 +134,31 @@ class Main extends ChromeApi {
     return AppInitState;
   };
 
-  stopApp = () => {
+  startApp = async () => {
+    const data = await db.get(["factory_setting"]);
+    console.log(data.factory_setting);
+    const {
+      hand_gesture,
+      voice_recognition,
+      eye_tracking
+    } = data.factory_setting;
+
+    if (hand_gesture) {
+      gest.start();
+    }
+    if (voice_recognition) {
+      console.log("start");
+      SpeechSynthesis.start();
+    }
+    if (eye_tracking) {
+      // enable webgazer.js
+    }
+  };
+
+  stopApp = async () => {
     AppInitState = 0;
     gest.stop();
+    SpeechSynthesis.pause();
   };
 }
 
