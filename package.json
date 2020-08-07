@@ -13,8 +13,8 @@
     "prettier_check_content": "prettier --check src/**/*.{js,jsx}",
     "prettier": "yarn prettier_check_src && yarn prettier_check_popup && yarn prettier_check_option && yarn prettier_check_content",
     "test:option": "mocha --timeout 10000 tests/index.js",
-    "prod": "yarn prettier && yarn build && yarn test:option",
-    "test": "yarn prettier && yarn build",
+    "prod": "yarn build && yarn test:option",
+    "test": "yarn build",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
   },
@@ -42,6 +42,7 @@
     "eslint-watch": "^7.0.0",
     "file-loader": "^4.2.0",
     "image-webpack-loader": "^5.0.0",
+    "mocha": "^8.1.1",
     "prettier": "1.18.2",
     "prop-types": "^15.7.2",
     "puppeteer": "^2.0.0",
