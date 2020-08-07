@@ -1,9 +1,9 @@
 const name = "Arrow keys";
 
-const exec = gesture => {
+const exec = direction => {
   if (!gesture.error) {
     var evt;
-    if (gesture.direction === "Long up") {
+    if (direction === "Long up") {
       evt = new KeyboardEvent("keydown", {
         altKey: false,
         bubbles: true,
@@ -28,7 +28,7 @@ const exec = gesture => {
         type: "keydown",
         which: 38
       });
-    } else if (gesture.direction === "Long down") {
+    } else if (direction === "Long down") {
       evt = new KeyboardEvent("keydown", {
         altKey: false,
         bubbles: true,
@@ -53,7 +53,7 @@ const exec = gesture => {
         type: "keydown",
         which: 40
       });
-    } else if (gesture.direction === "Left") {
+    } else if (direction === "Left") {
       evt = new KeyboardEvent("keydown", {
         altKey: false,
         bubbles: true,
@@ -78,7 +78,7 @@ const exec = gesture => {
         type: "keydown",
         which: 37
       });
-    } else if (gesture.direction === "Right") {
+    } else if (direction === "Right") {
       evt = new KeyboardEvent("keydown", {
         altKey: false,
         bubbles: true,
@@ -110,7 +110,18 @@ const exec = gesture => {
   }
 };
 
+const execHG = gesture => {
+  exec(gesture.direction);
+}
+
+const execVR = command => {
+  exec(command);
+}
+
 export default {
   name,
-  exec
+  exec: {
+    execHG,
+    execVR
+  }
 };

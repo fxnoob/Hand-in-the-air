@@ -5,9 +5,13 @@ export default class ContentScript {
   };
   initRoutes = () => {
     chrome.runtime.onMessage.addListener((message) => {
-      const { action, gesture } = message;
+      const { action, mode, command, gesture } = message;
       try {
-        Plugins[action](gesture);
+        if (mode == 'voice_recognition') {
+          Plugins[action].execVR(command);
+        } else if (mode == 'hand_gesture') {
+          Plugins[action].execHG(gesture);
+        }
       } catch (e) {
         /* eslint-disable no-console */
         console.log(e);

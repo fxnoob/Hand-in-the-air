@@ -49,12 +49,17 @@ class Main extends ChromeApi {
       },
       close: () => {
         this.stopApp();
+      },
+      '*text': text => {
+        this.setUpVoiceRecognitionCallback(text);
       }
     };
     SpeechSynthesis.addCommands(commands);
   };
 
   setUpVoiceRecognitionCallback = async command => {
+    /* eslint-disable no-console */
+    console.log({ command });
     const currentTab = await this.getActiveTab();
     const key = parseDomain(currentTab.url, { customTlds: customTlds });
     if (key === null) return 0;
@@ -62,23 +67,27 @@ class Main extends ChromeApi {
       try {
         const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
-        if (!_data[k].isActive ||
-          _data[k].mode != 'voice_recognition') return 0;
-        else if (_data[k].type === 0) {
-          await this.sendMessageToActiveTab({
-            action: _data[k].action,
-            gesture: ''
-          });
-        } else if (_data[k].type === 1) {
-          chrome.tabs.executeScript(currentTab.id, {
-            code:
-              "var command = " +
-              JSON.stringify(command) +
-              ";" +
-              _data[k].codeString
-          });
+        console.log("_data[k]", _data[k]);
+        if (_data[k].isActive && _data[k].mode == 'voice_recognition') {
+          if (_data[k].type === 0) {
+            await this.sendMessageToActiveTab({
+              action: _data[k].action,
+              mode: _data[k].mode,
+              command: command
+            });
+          } else if (_data[k].type === 1) {
+            chrome.tabs.executeScript(currentTab.id, {
+              code:
+                "var command = " +
+                JSON.stringify(command) +
+                ";" +
+                _data[k].codeString
+            });
+          }
+          return 1;
+        } else {
+          return 0;
         }
-        return 1;
       } catch (e) {
         return 0;
       }
@@ -128,11 +137,11 @@ class Main extends ChromeApi {
       try {
         const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
-        if (!_data[k].isActive ||
-          _data[k].mode != 'hand_gesture') return 0;
+        if (!(_data[k].isActive && _data[k].mode != 'hand_gesture')) return 0;
         else if (_data[k].type === 0) {
           await this.sendMessageToActiveTab({
             action: _data[k].action,
+            mode: _data[k].mode,
             gesture: gesture
           });
         } else if (_data[k].type === 1) {

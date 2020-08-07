@@ -80,12 +80,21 @@ class Tab {
 
 const tab = new Tab();
 
-const exec = gesture => {
+const execHG = gesture => {
   console.log(name, gesture);
   tab.navigate(gesture.direction);
 };
 
+const execVR = command => {
+  if (command == 'tab next') {
+
+  }
+}
+
 export default {
   name,
-  exec
+  exec: {
+    execHG,
+    execVR
+  }
 };

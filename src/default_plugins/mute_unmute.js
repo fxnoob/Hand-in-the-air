@@ -28,7 +28,7 @@ class MuteUnmute {
 
 const mu = new MuteUnmute();
 
-const exec = gesture => {
+const execHG = gesture => {
   if (gesture.direction === "Left") {
     mu.mutePage();
   } else if (gesture.direction === "Right") {
@@ -36,7 +36,19 @@ const exec = gesture => {
   }
 };
 
+const execVR = command => {
+  console.log(command);
+  if (command === "mute") {
+    mu.mutePage();
+  } else if (command === "Unmute") {
+    mu.unmutePage();
+  }
+}
+
 export default {
   name,
-  exec
+  exec: {
+    execHG,
+    execVR
+  }
 };
