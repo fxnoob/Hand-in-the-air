@@ -1,5 +1,6 @@
 import React from "react";
 import clsx from "clsx";
+import propTypes from 'prop-types';
 import { lighten, makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,33 +18,9 @@ import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import Switch from "@material-ui/core/Switch";
-import Db from "../../../src/lib/db";
-
+import Db from "../../../lib/db";
+import { timeDifference } from "../../../lib/helper";
 const db = new Db();
-
-const timeDifference = (current, previous) => {
-  let msPerMinute = 60 * 1000;
-  let msPerHour = msPerMinute * 60;
-  let msPerDay = msPerHour * 24;
-  let msPerMonth = msPerDay * 30;
-  let msPerYear = msPerDay * 365;
-
-  let elapsed = current - previous;
-
-  if (elapsed < msPerMinute) {
-    return Math.round(elapsed / 1000) + " seconds ago";
-  } else if (elapsed < msPerHour) {
-    return Math.round(elapsed / msPerMinute) + " minutes ago";
-  } else if (elapsed < msPerDay) {
-    return Math.round(elapsed / msPerHour) + " hours ago";
-  } else if (elapsed < msPerMonth) {
-    return "approximately " + Math.round(elapsed / msPerDay) + " days ago";
-  } else if (elapsed < msPerYear) {
-    return "approximately " + Math.round(elapsed / msPerMonth) + " months ago";
-  } else {
-    return "approximately " + Math.round(elapsed / msPerYear) + " years ago";
-  }
-};
 
 const fetchAllData = () => {
   return db.get(null);
@@ -79,10 +56,10 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
+            inputProps={{ "aria-label": "select all handlers" }}
           />
         </TableCell>
-        {headCells.map(headCell => (
+        {headCells.map(headCell =>
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -95,18 +72,28 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {orderBy === headCell.id ?
                 <span className={classes.visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
-              ) : null}
+                : null}
             </TableSortLabel>
           </TableCell>
-        ))}
+        )}
       </TableRow>
     </TableHead>
   );
 }
+EnhancedTableHead.propTypes = {
+  classes: propTypes.node,
+  onSelectAllClick: propTypes.func,
+  order: propTypes.string,
+  orderBy: propTypes.string,
+  numSelected: propTypes.number,
+  rowCount: propTypes.number,
+  onRequestSort: propTypes.func
+};
+
 
 const useToolbarStyles = makeStyles(theme => ({
   root: {
@@ -116,13 +103,13 @@ const useToolbarStyles = makeStyles(theme => ({
   highlight:
     theme.palette.type === "light"
       ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
-        }
+        color: theme.palette.secondary.main,
+        backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+      }
       : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
-        },
+        color: theme.palette.text.primary,
+        backgroundColor: theme.palette.secondary.dark
+      },
   spacer: {
     flex: "1 1 100%"
   },
@@ -135,8 +122,7 @@ const useToolbarStyles = makeStyles(theme => ({
 }));
 
 const deleteSelected = selectedId => {
-  console.log(selectedId);
-  db.remove(selectedId).then(res => {
+  db.remove(selectedId).then(() => {
     alert("deleted");
     window.location.reload();
   });
@@ -153,34 +139,38 @@ const EnhancedTableToolbar = props => {
       })}
     >
       <div className={classes.title}>
-        {numSelected > 0 ? (
+        {numSelected > 0 ?
           <Typography color="inherit" variant="subtitle1">
             {numSelected} selected
           </Typography>
-        ) : (
+          :
           <Typography variant="h6" id="tableTitle">
             Custom Handlers List
           </Typography>
-        )}
+        }
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
-        {numSelected > 0 ? (
+        {numSelected > 0 ?
           <Tooltip title="Delete">
             <IconButton aria-label="delete">
               <DeleteIcon onClick={() => deleteSelected(selectedId)} />
             </IconButton>
           </Tooltip>
-        ) : (
+          :
           <Tooltip title="Filter list">
             <IconButton aria-label="filter list">
               <FilterListIcon />
             </IconButton>
           </Tooltip>
-        )}
+        }
       </div>
     </Toolbar>
   );
+};
+EnhancedTableToolbar.propTypes = {
+  numSelected: propTypes.number,
+  selectedId: propTypes.string
 };
 
 const useStyles = makeStyles(theme => ({
@@ -211,14 +201,14 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function EnhancedTable() {
+export default function EnhancedTable(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const page = 0;
+  const dense = false;
+  const rowsPerPage = 5;
   const [RowVal, setRows] = React.useState({ rows: [] });
   const [loaded, setLoaded] = React.useState(0);
 
@@ -227,28 +217,30 @@ export default function EnhancedTable() {
       try {
         const res = await fetchAllData();
         let rows = [];
-
         for (let key in res) {
           if (res[key].hasOwnProperty("codeString")) {
-            rows.push({
-              domain: key,
-              codeString: res[key].codeString,
-              created: res[key].created,
-              createdHR: timeDifference(+new Date(), res[key].created),
-              isActive: res[key].isActive
-            });
+            props.mode == res[key].mode || "";
+            if (props.mode == res[key].mode) {
+              rows.push({
+                domain: key,
+                codeString: res[key].codeString,
+                created: res[key].created,
+                createdHR: timeDifference(+new Date(), res[key].created),
+                isActive: res[key].isActive
+              });
+            }
           }
         }
-        console.log({ res });
         setRows({ rows: rows });
         setLoaded(1);
       } catch (e) {
-        console.log({ e });
+        /* eslint-disable no-console */
+        console.log(e);
       }
     };
     init()
-      .then(res => {})
-      .catch(e => {});
+      .then(() => {})
+      .catch(() => {});
   }, []);
 
   function handleRequestSort(event, property) {
@@ -285,36 +277,16 @@ export default function EnhancedTable() {
     setSelected(newSelected);
   }
 
-  function handleChangePage(event, newPage) {
-    setPage(newPage);
-  }
-
-  function handleChangeRowsPerPage(event) {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  }
-
-  function handleChangeDense(event) {
-    setDense(event.target.checked);
-  }
-
   const toggleActive = row => {
-    console.log({ row });
     const rows = RowVal.rows;
     row.isActive = !row.isActive;
     rows[row.domain] = row;
     db.set({
       [row.domain]: row
     });
-    console.log({ rows });
     setRows({ rows: rows });
   };
-
   const isSelected = name => selected.indexOf(name) !== -1;
-
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
-
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -369,7 +341,7 @@ export default function EnhancedTable() {
                     <TableCell align="right">{row.codeString}</TableCell>
                     <TableCell align="right">{row.createdHR}</TableCell>
                     <TableCell align="right">
-                      {loaded ? (
+                      {loaded ?
                         <Switch
                           checked={row.isActive}
                           value={row.isActive}
@@ -378,9 +350,9 @@ export default function EnhancedTable() {
                           }}
                           inputProps={{ "aria-label": "secondary checkbox" }}
                         />
-                      ) : (
+                        :
                         "loading.."
-                      )}
+                      }
                     </TableCell>
                   </TableRow>
                 );
@@ -392,8 +364,7 @@ export default function EnhancedTable() {
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
           count={rows.length}
-          onChangePage={e => {
-            console.log(e);
+          onChangePage={() => {
           }}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -408,3 +379,7 @@ export default function EnhancedTable() {
     </div>
   );
 }
+EnhancedTable.propTypes = {
+  mode: propTypes.string
+};
+

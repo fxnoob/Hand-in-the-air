@@ -53,6 +53,38 @@ class Main extends ChromeApi {
     };
     SpeechSynthesis.addCommands(commands);
   };
+
+  setUpVoiceRecognitionCallback = async command => {
+    const currentTab = await this.getActiveTab();
+    const key = parseDomain(currentTab.url, { customTlds: customTlds });
+    if (key === null) return 0;
+    else {
+      try {
+        const k = key.domain + "." + key.tld;
+        const _data = await db.get([k]);
+        if (!_data[k].isActive ||
+          _data[k].mode != 'voice_recognition') return 0;
+        else if (_data[k].type === 0) {
+          await this.sendMessageToActiveTab({
+            action: _data[k].action,
+            gesture: ''
+          });
+        } else if (_data[k].type === 1) {
+          chrome.tabs.executeScript(currentTab.id, {
+            code:
+              "var command = " +
+              JSON.stringify(command) +
+              ";" +
+              _data[k].codeString
+          });
+        }
+        return 1;
+      } catch (e) {
+        return 0;
+      }
+    }
+  };
+
   setUpHandGesture = () => {
     gest.options.subscribeWithCallback(async gesture => {
       try {
@@ -82,23 +114,23 @@ class Main extends ChromeApi {
           }
         }
       } catch (e) {
-        console.log({ e });
+        /* eslint-disable no-console */
+        console.log(e);
       }
     });
   };
 
   setUpGestureCallback = async gesture => {
     const currentTab = await this.getActiveTab();
-    console.log({ currentTab });
     const key = parseDomain(currentTab.url, { customTlds: customTlds });
     if (key === null) return 0;
     else {
       try {
         const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
-        if (!_data[k].isActive) return 0;
+        if (!_data[k].isActive ||
+          _data[k].mode != 'hand_gesture') return 0;
         else if (_data[k].type === 0) {
-          console.log("type 0");
           await this.sendMessageToActiveTab({
             action: _data[k].action,
             gesture: gesture
@@ -120,7 +152,7 @@ class Main extends ChromeApi {
   };
 
   popUpClickSetup() {
-    chrome.browserAction.onClicked.addListener(tab => {
+    chrome.browserAction.onClicked.addListener(() => {
       if (this.toggleApp()) {
         this.startApp();
       } else {
@@ -136,7 +168,6 @@ class Main extends ChromeApi {
 
   startApp = async () => {
     const data = await db.get(["factory_setting"]);
-    console.log(data.factory_setting);
     const {
       hand_gesture,
       voice_recognition,
@@ -147,7 +178,6 @@ class Main extends ChromeApi {
       gest.start();
     }
     if (voice_recognition) {
-      console.log("start");
       SpeechSynthesis.start();
     }
     if (eye_tracking) {
@@ -165,9 +195,5 @@ class Main extends ChromeApi {
 const main = new Main();
 main
   .init()
-  .then(res => {
-    console.log({ res });
-  })
-  .catch(e => {
-    console.log({ e });
-  });
+  .then(() => {})
+  .catch(() => {});

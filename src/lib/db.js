@@ -11,7 +11,7 @@ export class Schema {
         right: true,
         long_up: false,
         hand_gesture: true,
-        voice_recognition: false,
+        voice_recognition: true,
         eye_tracking: false
       }
     };
@@ -57,7 +57,7 @@ export default class Db {
   getAll() {
     return new Promise((resolve, reject) => {
       try {
-        chrome.storage.local.get({}, items => {
+        chrome.storage.local.get(null, items => {
           if (items === undefined) {
             reject(new Error("Error"));
           } else {
@@ -76,7 +76,7 @@ export default class Db {
   remove(keyStr) {
     return new Promise((resolve, reject) => {
       try {
-        chrome.storage.local.remove(keyStr, res => {
+        chrome.storage.local.remove(keyStr, () => {
           resolve(keyStr);
         });
       } catch (e) {

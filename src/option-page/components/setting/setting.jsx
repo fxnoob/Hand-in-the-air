@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
@@ -9,9 +9,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Divider from "@material-ui/core/Divider";
 import FolderIcon from "@material-ui/icons/Folder";
 import Checkbox from "@material-ui/core/Checkbox";
-import MenuItem from "@material-ui/core/MenuItem";
-import Select from "@material-ui/core/Select";
-import Db from "../../../src/lib/db";
+import Db from "../../../lib/db";
 
 const db = new Db();
 const useStyles = makeStyles(theme => ({
@@ -51,7 +49,7 @@ export default function Settings() {
         [name]: !state[name]
       };
     }
-    db.set(config).then(res => {
+    db.set(config).then(() => {
       setState({ ...config.factory_setting });
     });
   };
@@ -77,8 +75,8 @@ export default function Settings() {
       });
     };
     init()
-      .then(res => {})
-      .catch(e => {});
+      .then(() => {})
+      .catch(() => {});
   }, []);
 
   return (

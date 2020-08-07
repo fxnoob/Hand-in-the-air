@@ -1,16 +1,16 @@
-import Plugins from "../src/default_plugins/registry";
+import Plugins from "../default_plugins/registry";
 export default class ContentScript {
   init = () => {
     this.initRoutes();
   };
   initRoutes = () => {
-    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((message) => {
       const { action, gesture } = message;
       try {
-        console.log(Plugins);
         Plugins[action](gesture);
       } catch (e) {
-        console.log({ e });
+        /* eslint-disable no-console */
+        console.log(e);
       }
       return true;
     });
