@@ -1,10 +1,10 @@
-import React, { Suspense, lazy } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { Suspense } from "react";
+import PropTypes from 'prop-types';
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import TabPanel from '../../components/TabPanel';
 import Container from "@material-ui/core/Container";
 import Home from "./home/home";
 import Help from "./help/help";
@@ -12,23 +12,6 @@ import About from "./about/about";
 import Setting from "./setting/setting";
 
 const queryString = require("query-string");
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`scrollable-auto-tabpanel-${index}`}
-      aria-labelledby={`scrollable-auto-tab-${index}`}
-      {...other}
-    >
-      <Box p={3}>{children}</Box>
-    </Typography>
-  );
-}
 
 function a11yProps(index) {
   return {
@@ -51,18 +34,18 @@ export default function ScrollableTabsButtonAuto() {
   const parsed = queryString.parse(location.search);
   if (parsed.page) {
     switch (parsed.page) {
-      case "home":
-        initState = 0;
-        break;
-      case "help":
-        initState = 1;
-        break;
-      case "setting":
-        initState = 2;
-        break;
-      case "about":
-        initState = 3;
-        break;
+    case "home":
+      initState = 0;
+      break;
+    case "help":
+      initState = 1;
+      break;
+    case "setting":
+      initState = 2;
+      break;
+    case "about":
+      initState = 3;
+      break;
     }
   }
   const [value, setValue] = React.useState(initState);
@@ -114,3 +97,10 @@ export default function ScrollableTabsButtonAuto() {
     </div>
   );
 }
+
+ScrollableTabsButtonAuto.propTypes = {
+  children: PropTypes.node,
+  value: PropTypes.number,
+  index: PropTypes.number
+};
+

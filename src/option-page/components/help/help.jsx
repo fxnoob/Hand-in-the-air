@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
@@ -23,13 +23,17 @@ const useStyles = makeStyles({
 
 const init = () => {
   if (navigator.webkitGetUserMedia) {
-    navigator.webkitGetUserMedia({ video: true }, onSuccess, onFail);
+    navigator.webkitGetUserMedia(
+      { video: true, audio: true },
+      onSuccess,
+      onFail
+    );
   } else {
     alert("Camera is not available");
   }
 };
 
-const onSuccess = stream => {};
+const onSuccess = () => {};
 
 const onFail = () => {
   alert("could not connect to stream. Please allow camera permission!");
@@ -65,7 +69,7 @@ export default function MediaCard() {
           />
           <CardContent>
             Allow Camera permission after that close this tab and click on
-            extension's icon again.
+            extension&apos;s icon again.
           </CardContent>
         </CardActionArea>
         <CardActions>

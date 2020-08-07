@@ -12,7 +12,7 @@ const registerPlugin = (...plugins) => {
   });
 };
 //register plugin here
-registerPlugin(Oridomi, Throwable, Tab, MuteUnmute, ArrowKeys);
+registerPlugin(Oridomi, MuteUnmute, Throwable, Tab, ArrowKeys);
 
 export const names = Object.keys(Plugins);
 

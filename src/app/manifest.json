@@ -19,6 +19,12 @@
     },
     "default_title": "hand in the air"
   },
+  "web_accessible_resources": [
+    "background.bundle.js.map",
+    "content_script.bundle.js.map",
+    "option.bundle.js.map",
+    "popup.bundle.js.map"
+  ],
   "options_page": "option.html",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "content_scripts": [

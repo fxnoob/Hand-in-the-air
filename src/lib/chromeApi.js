@@ -2,7 +2,7 @@ class ChromeApi {
   constructor() {}
 
   getActiveTab = () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       chrome.tabs.query({ currentWindow: true, active: true }, tabs => {
         resolve(tabs[0]);
       });
@@ -59,10 +59,7 @@ class ChromeApi {
 
   closeActiveTab = callback => {
     chrome.tabs.query({ active: true }, tabs => {
-      console.log({ tabs });
-      var url = tabs[0].url;
       const tabId = tabs[0].id;
-      console.log("URL from main.js", url);
       chrome.tabs.remove(tabId, callback);
     });
   };

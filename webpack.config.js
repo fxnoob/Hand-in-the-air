@@ -3,17 +3,17 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 module.exports = {
   entry: {
-    content_script: "./content-scripts/App.jsx",
+    content_script: "./src/content-scripts/App.jsx",
     background: "./src/background.js",
-    popup: "./popup-page/App.jsx",
-    option: "./option-page/App.jsx"
+    popup: "./src/popup-page/App.jsx",
+    option: "./src/option-page/App.jsx"
   },
   module: {
     rules: [
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ["babel-loader"]
+        use: ["babel-loader", "eslint-loader"]
       },
       {
         test: /\.(gif|png|jpe?g|svg)$/i,
@@ -38,11 +38,12 @@ module.exports = {
     publicPath: "/",
     filename: "[name].bundle.js"
   },
+  devtool: "inline-source-map",
   plugins: [
     new CopyWebpackPlugin(
       [
-        { from: "./popup-page/popup.html", force: true },
-        { from: "./option-page/option.html", force: true },
+        { from: "./src/popup-page/popup.html", force: true },
+        { from: "./src/option-page/option.html", force: true },
         { from: "./src/app/", force: true }
       ],
       {}

@@ -36,7 +36,7 @@ describe("Extension UI Testing", function() {
       const h1 = "Create Custom Handler or Download from  here";
       const extH1 = await extensionPage.evaluate(() =>
         document
-          .querySelector("#scrollable-auto-tabpanel-0 > div > div > h3")
+          .querySelector("#simple-tabpanel-0 > div > h3")
           .textContent.trim()
       );
       assert.equal(extH1, h1);

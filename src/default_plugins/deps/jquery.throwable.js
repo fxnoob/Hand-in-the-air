@@ -1,4 +1,5 @@
 import * as jQuery from "jquery";
+
 /*
  * throwable
  * JQuery plugin

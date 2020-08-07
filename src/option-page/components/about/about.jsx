@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 
 const useStyles = makeStyles({
   root: {
@@ -9,22 +9,24 @@ const useStyles = makeStyles({
   }
 });
 
-export default () => {
+const About = () => {
   const classes = useStyles();
   return (
     <div className={classes.root}>
       <h1>About</h1>
       <Typography variant="h5" gutterBottom>
         Hi, This is{" "}
-        <a href="https://github.com/fxnoob" target="_blank">
+        <a rel="noreferrer" href="https://github.com/fxnoob" target="_blank">
           Hitesh Saini
         </a>
         . If you like this project give it a Star{" "}
-        <a href="https://github.com/fxnoob/swipe-tabs-chrome-extension">
+        <a rel="noreferrer" href="https://github.com/fxnoob/swipe-tabs-chrome-extension">
           here.
         </a>{" "}
-        Visit my Youtube channel <a href="https://youtube.com/fxnoob">Here.</a>
+        Visit my Youtube channel <a rel="noreferrer" href="https://youtube.com/fxnoob">Here.</a>
       </Typography>
     </div>
   );
 };
+
+export default About;

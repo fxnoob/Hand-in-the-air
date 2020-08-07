@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const plugins = {
   "play2048.co": {
     codeString:
@@ -5,7 +6,8 @@ const plugins = {
     created: 1568466427168,
     type: 1, //Custom
     domain: "play2048.co",
-    isActive: 1
+    isActive: 1,
+    mode: "hand_gesture"
   },
   "slideshare.net": {
     codeString:
@@ -13,7 +15,8 @@ const plugins = {
     created: 1568997774278,
     type: 1, //Custom
     domain: "slideshare.net",
-    isActive: true
+    isActive: true,
+    mode: "hand_gesture"
   },
   "speakerdeck.com": {
     codeString:
@@ -22,7 +25,8 @@ const plugins = {
     type: 1, //Custom
     domain: "speakerdeck.com",
     isActive: 1,
-    url: "https://speakerdeck.com"
+    url: "https://speakerdeck.com",
+    mode: "hand_gesture"
   },
   "threesgame.com": {
     codeString:
@@ -31,7 +35,8 @@ const plugins = {
     type: 1, //Custom
     domain: "threesgame.com",
     isActive: 1,
-    url: "threesgame.com"
+    url: "threesgame.com",
+    mode: "hand_gesture"
   },
   "tinder.com": {
     codeString:
@@ -39,7 +44,8 @@ const plugins = {
     created: 1568475367804,
     type: 1, //Custom
     domain: "tinder.com",
-    isActive: 1
+    isActive: 1,
+    mode: "hand_gesture"
   },
   "youtube.com": {
     codeString:
@@ -47,7 +53,8 @@ const plugins = {
     created: 1568475352636,
     type: 1, //Custom
     domain: "youtube.com",
-    isActive: 1
+    isActive: 1,
+    mode: "hand_gesture"
   }
 };
 

@@ -1,4 +1,5 @@
 import "@babel/polyfill";
+import * as SpeechSynthesis from "annyang";
 import Gest from "./lib/gest.es6";
 import ChromeApi from "./lib/chromeApi";
 import Db, { Schema } from "./lib/db";
@@ -19,22 +20,81 @@ class Main extends ChromeApi {
 
   init = async () => {
     await this.initDb();
-    this.setUpTabSwipe();
+    this.setUpHandGesture();
+    this.setUpVoiceRecognition();
     this.popUpClickSetup();
   };
-
   initDb = async () => {
+    let queryRes;
     const res = await db.get(["loadedFirstTime3"]);
     if (!res.hasOwnProperty("loadedFirstTime3")) {
-      await db.set({
+      queryRes = {
         loadedFirstTime: true,
         ...schema.data,
         ...schema.Plugins
-      });
+      };
+      await db.set(queryRes);
+    } else {
+      queryRes = await db.getAll();
+    }
+    return queryRes;
+  };
+  setUpVoiceRecognition = () => {
+    const commands = {
+      left: () => {
+        this.shiftToLeftTab();
+      },
+      right: () => {
+        this.shiftToRightTab();
+      },
+      close: () => {
+        this.stopApp();
+      },
+      '*text': text => {
+        this.setUpVoiceRecognitionCallback(text);
+      }
+    };
+    SpeechSynthesis.addCommands(commands);
+  };
+
+  setUpVoiceRecognitionCallback = async command => {
+    /* eslint-disable no-console */
+    console.log({ command });
+    const currentTab = await this.getActiveTab();
+    const key = parseDomain(currentTab.url, { customTlds: customTlds });
+    if (key === null) return 0;
+    else {
+      try {
+        const k = key.domain + "." + key.tld;
+        const _data = await db.get([k]);
+        console.log("_data[k]", _data[k]);
+        if (_data[k].isActive && _data[k].mode == 'voice_recognition') {
+          if (_data[k].type === 0) {
+            await this.sendMessageToActiveTab({
+              action: _data[k].action,
+              mode: _data[k].mode,
+              command: command
+            });
+          } else if (_data[k].type === 1) {
+            chrome.tabs.executeScript(currentTab.id, {
+              code:
+                "var command = " +
+                JSON.stringify(command) +
+                ";" +
+                _data[k].codeString
+            });
+          }
+          return 1;
+        } else {
+          return 0;
+        }
+      } catch (e) {
+        return 0;
+      }
     }
   };
 
-  setUpTabSwipe = () => {
+  setUpHandGesture = () => {
     gest.options.subscribeWithCallback(async gesture => {
       try {
         if (gesture.error) {
@@ -47,7 +107,7 @@ class Main extends ChromeApi {
           );
           //lock for 1.5 sec for next gesture recognition
           if (diffTimeStamp > 1500) {
-            const initCustomHandler = await this.setUpCustomTabSwipe(gesture);
+            const initCustomHandler = await this.setUpGestureCallback(gesture);
             if (!initCustomHandler) {
               const setting = await db.get(["factory_setting"]);
               const { left, right, long_up } = setting.factory_setting;
@@ -63,25 +123,25 @@ class Main extends ChromeApi {
           }
         }
       } catch (e) {
-        console.log({ e });
+        /* eslint-disable no-console */
+        console.log(e);
       }
     });
   };
 
-  setUpCustomTabSwipe = async gesture => {
+  setUpGestureCallback = async gesture => {
     const currentTab = await this.getActiveTab();
-    console.log({ currentTab });
     const key = parseDomain(currentTab.url, { customTlds: customTlds });
     if (key === null) return 0;
     else {
       try {
         const k = key.domain + "." + key.tld;
         const _data = await db.get([k]);
-        if (!_data[k].isActive) return 0;
+        if (!(_data[k].isActive && _data[k].mode != 'hand_gesture')) return 0;
         else if (_data[k].type === 0) {
-          console.log("type 0");
           await this.sendMessageToActiveTab({
             action: _data[k].action,
+            mode: _data[k].mode,
             gesture: gesture
           });
         } else if (_data[k].type === 1) {
@@ -101,9 +161,9 @@ class Main extends ChromeApi {
   };
 
   popUpClickSetup() {
-    chrome.browserAction.onClicked.addListener(tab => {
+    chrome.browserAction.onClicked.addListener(() => {
       if (this.toggleApp()) {
-        gest.start();
+        this.startApp();
       } else {
         this.stopApp();
       }
@@ -115,18 +175,34 @@ class Main extends ChromeApi {
     return AppInitState;
   };
 
-  stopApp = () => {
+  startApp = async () => {
+    const data = await db.get(["factory_setting"]);
+    const {
+      hand_gesture,
+      voice_recognition,
+      eye_tracking
+    } = data.factory_setting;
+
+    if (hand_gesture) {
+      gest.start();
+    }
+    if (voice_recognition) {
+      SpeechSynthesis.start();
+    }
+    if (eye_tracking) {
+      // enable webgazer.js
+    }
+  };
+
+  stopApp = async () => {
     AppInitState = 0;
     gest.stop();
+    SpeechSynthesis.pause();
   };
 }
 
 const main = new Main();
 main
   .init()
-  .then(res => {
-    console.log({ res });
-  })
-  .catch(e => {
-    console.log({ e });
-  });
+  .then(() => {})
+  .catch(() => {});

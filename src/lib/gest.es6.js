@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  * @name: gest.es6.js
  * @description: gest.es6.js is a webcam based gesture recognition library that helps developers make webpages more immersive
