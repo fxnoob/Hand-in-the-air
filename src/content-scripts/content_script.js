@@ -7,6 +7,8 @@ export default class ContentScript {
     chrome.runtime.onMessage.addListener((message) => {
       const { action, mode, command, gesture } = message;
       try {
+        const event = new CustomEvent('hita:detect', { detail: message });
+        document.dispatchEvent(event);
         if (mode == 'voice_recognition') {
           Plugins[action].execVR(command);
         } else if (mode == 'hand_gesture') {

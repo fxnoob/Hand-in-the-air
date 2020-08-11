@@ -14,12 +14,13 @@ import Paper from "@material-ui/core/Paper";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import TabPanel from "../../../components/TabPanel";
+import WebGazerCalibrator from './WebGazerCalibrator';
 import Db from "../../../lib/db";
 import customTlds from "../../../constants/customTlds";
 import { names as defaultPlugins } from "../../../default_plugins/registry";
 
 const db = new Db();
-const parseDomain = require("parse-domain");
+const { parseDomain } = require("parse-domain");
 const useStyles = makeStyles(theme => ({
   container: {
     display: "flex",
@@ -222,12 +223,16 @@ const HomeView = () => {
       >
         <Tab label="Voice Recognition" />
         <Tab label="Hand Gesture" />
+        <Tab label="Eye Tracking" />
       </Tabs>
       <TabPanel value={value} index={0}>
         <CustomGesturesForm mode="voice_recognition" />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <CustomGesturesForm mode="hand_gesture" />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <WebGazerCalibrator/>
       </TabPanel>
     </Paper>
   );

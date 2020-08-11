@@ -12,7 +12,8 @@ export class Schema {
         long_up: false,
         hand_gesture: true,
         voice_recognition: true,
-        eye_tracking: false
+        eye_tracking: true,
+        webgazerCalibrationDone: false,
       }
     };
   }
