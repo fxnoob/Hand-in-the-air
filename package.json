@@ -40,7 +40,7 @@
     "eslint-loader": "^4.0.2",
     "eslint-plugin-react": "^7.20.5",
     "eslint-watch": "^7.0.0",
-    "file-loader": "^4.2.0",
+    "file-loader": "^6.1.0",
     "image-webpack-loader": "^5.0.0",
     "mocha": "^8.1.1",
     "prettier": "1.18.2",
