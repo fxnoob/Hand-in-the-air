@@ -41,7 +41,7 @@
     "eslint-plugin-react": "^7.20.5",
     "eslint-watch": "^7.0.0",
     "file-loader": "^4.2.0",
-    "image-webpack-loader": "^5.0.0",
+    "image-webpack-loader": "^7.0.1",
     "mocha": "^8.1.1",
     "prettier": "1.18.2",
     "prop-types": "^15.7.2",
