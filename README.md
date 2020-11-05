@@ -42,7 +42,7 @@ This extension uses a number of open source projects to work properly:
 
 ## Development
 
-### [How to create Plugin for this extension?](https://github.com/fxnoob/swipe-tabs-chrome-extension/wiki/How-to-create-Plugin-for-this-extension%3F)
+### [How to create Plugin for this extension?](https://github.com/fxnoob/Hand-in-the-air/wiki/Creating-Plugins-for-this-extension)
 
 ## TODO 
 
