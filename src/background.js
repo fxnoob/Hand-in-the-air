@@ -1,10 +1,10 @@
 import "@babel/polyfill";
 import * as SpeechSynthesis from "annyang";
+import webgazer from './lib/webgazer/index';
 import Gest from "./lib/gest.es6";
 import ChromeApi from "./lib/chromeApi";
 import Db, { Schema } from "./lib/db";
 import customTlds from "./constants/customTlds";
-
 const parseDomain = require("parse-domain");
 let AppInitState = 0; // it means app is off on startup
 
@@ -16,12 +16,14 @@ class Main extends ChromeApi {
   constructor() {
     super();
     this.LastRecordedTimeStamp = +new Date();
+    this.webgazer = null;
   }
 
   init = async () => {
     await this.initDb();
     this.setUpHandGesture();
     this.setUpVoiceRecognition();
+    this.setUpEyeTracking();
     this.popUpClickSetup();
   };
   initDb = async () => {
@@ -39,6 +41,17 @@ class Main extends ChromeApi {
     }
     return queryRes;
   };
+
+  setUpEyeTracking = async () => {
+    webgazer.params.showVideoPreview = false;
+    //start the webgazer tracker
+    this.webgazer =
+      await webgazer.setRegression('ridge')
+      /* currently must set regression and tracker */
+        .setGazeListener(() => {}).begin();
+    webgazer.showPredictionPoints(false);
+  }
+
   setUpVoiceRecognition = () => {
     const commands = {
       left: () => {
@@ -164,8 +177,14 @@ class Main extends ChromeApi {
     chrome.browserAction.onClicked.addListener(() => {
       if (this.toggleApp()) {
         this.startApp();
+        chrome.browserAction.setIcon({
+          path: 'images/playing.png'
+        });
       } else {
         this.stopApp();
+        chrome.browserAction.setIcon({
+          path: 'images/128x128.png'
+        });
       }
     });
   }
