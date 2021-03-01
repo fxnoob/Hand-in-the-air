@@ -59,7 +59,7 @@
     "@material-ui/icons": "^4.2.1",
     "annyang": "^2.6.1",
     "clsx": "^1.0.4",
-    "husky": "^3.0.9",
+    "husky": "^5.1.2",
     "jquery": "latest",
     "oridomi": "^1.1.2",
     "parse-domain": "^2.3.2",
