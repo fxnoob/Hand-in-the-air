@@ -45,7 +45,7 @@
     "mocha": "^8.1.1",
     "prettier": "1.18.2",
     "prop-types": "^15.7.2",
-    "puppeteer": "^2.0.0",
+    "puppeteer": "^9.1.1",
     "react-hot-loader": "^4.12.10",
     "webpack": "^4.39.1",
     "webpack-cli": "^3.3.6",
